@@ -1,7 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz24/bloc/home_bloc.dart';
+
+import 'bloc/api_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomaPage(),
+      home: HomaPage(),
     );
   }
 }
@@ -109,6 +114,39 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                                   Color(0xffAE2BB6)
                                 ])),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 35, right: 35),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 65,
+                              height: 31,
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(8),
+                                    bottomRight: Radius.circular(8),
+                                  )),
+                              child: Center(
+                                child: Text(
+                                  'نسخه رایگان',
+                                  style: TextStyle(
+                                      foreground: Paint()
+                                        ..shader = linearGradient,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ],
+                        ),
+                      ),
                       Positioned(
                         top: 45,
                         right: 20,
@@ -166,9 +204,9 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                                                     Radius.circular(35),
                                               )),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-
                                               RichText(
                                                 text: const TextSpan(
                                                   text: 'متمایز باشید با ',
@@ -181,14 +219,18 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                                                       text: 'آزمون های ما',
                                                       style: TextStyle(
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(width: 10,),
-                                              Image.asset('assets/img/arrow_left.png'),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Image.asset(
+                                                  'assets/img/arrow_left.png'),
                                             ],
                                           ),
                                         ),
@@ -206,20 +248,17 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                 ),
                 TabPageSelector(
                   controller: TabController(
-                      length: imageUrls.length,
-
-                      initialIndex: currentIndex,
-                      vsync: this,),
-                  selectedColor:Color(0xffAE2BB6) ,
+                    length: imageUrls.length,
+                    initialIndex: currentIndex,
+                    vsync: this,
+                  ),
+                  selectedColor: Color(0xffAE2BB6),
                   color: Colors.grey.shade300,
                   indicatorSize: 8,
-                  borderStyle:BorderStyle.none,
-
-
-
+                  borderStyle: BorderStyle.none,
                 ),
                 const SizedBox(
-                  height: 120,
+                  height: 100,
                   child: MenuItem(
                     imagePath: 'assets/img/1.png',
                     title: 'مطالعه هوشمند',
@@ -227,7 +266,7 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(
-                  height: 120,
+                  height: 100,
                   child: MenuItem(
                     imagePath: 'assets/img/2.png',
                     title: 'آزمون چندسطحی',
@@ -247,10 +286,7 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                   children: [
                     Image.asset('assets/img/line.png'),
                     const SizedBox(width: 4),
-                    Icon(
-                      CupertinoIcons.time_solid,
-                      color: Colors.grey.shade300,
-                    ),
+                    Image.asset('assets/img/clock.png'),
                     const SizedBox(
                       width: 5,
                     ),
@@ -264,10 +300,7 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                     const SizedBox(
                       width: 5,
                     ),
-                    Icon(
-                      CupertinoIcons.time_solid,
-                      color: Colors.grey.shade300,
-                    ),
+          Image.asset('assets/img/clock.png'),
                     const SizedBox(width: 4),
                     Image.asset('assets/img/line.png'),
                   ],
@@ -431,7 +464,14 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                         left: 60,
                         top: 12,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+  create: (context) => HomeBloc(),
+  child:  ProfileScreen(),
+),
+                            ));
+                          },
                           child: Column(
                             children: [
                               Image.asset('assets/img/profile.png'),
@@ -459,10 +499,11 @@ class _HomaPageState extends State<HomaPage> with TickerProviderStateMixin {
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Text(
+                              Text(
                                 'آزمون',
                                 style: TextStyle(
-                                    color: Color(0xff2B396B),
+                                    foreground: Paint()
+                                      ..shader = linearGradient,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 16),
                               )
@@ -515,7 +556,7 @@ class MenuItem extends StatelessWidget {
         ),
         Positioned(
           top: 0,
-          right: 30,
+          right: 25,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -574,5 +615,69 @@ class MenuItem extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class ProfileScreen extends StatefulWidget {
+  @override
+  State<ProfileScreen> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<HomeBloc>(context).add(LoadProductEvent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+          floatingActionButton: SizedBox(
+            width: 340,
+            child: FloatingActionButton.extended(
+                backgroundColor: Colors.purple.shade200,
+                onPressed: ()  {
+
+                },
+                label: const Text(
+                  'دیتا فیک هستند .( انتقال صفحه و مدیریت اتصال به ای پی ای با بلاک ) ',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700),
+                )),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          body: BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              if (state.apiState is APILoading ) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state.apiState is ApiError) {
+                return Center(
+                  child: Text((state.apiState as ApiError).error),
+                );
+              } else if (state.apiState is ApiCompleted) {
+                final data = (state.apiState as ApiCompleted).data['data'] as List;
+                return ListView.builder(
+
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      final product=data[index];
+                      return ListTile(
+                        title: Text('slug: ${product['slug']}'),
+                        trailing: Text(product['id'].toString()),
+
+                      );
+                    },);
+               
+              }
+              return Container();
+            },
+          ),
+        ));
   }
 }
